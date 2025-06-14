@@ -1,3 +1,5 @@
+import Card from './components/ui/card';
+import Button from './components/ui/button';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from './constants';
