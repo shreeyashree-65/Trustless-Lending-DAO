@@ -5,15 +5,14 @@ import { ethers } from 'ethers';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from './constants';
 import { Loader2 } from 'lucide-react';
 
-const [loanAmount, setLoanAmount] = useState('');
-const [repayAmount, setRepayAmount] = useState('');
-const [duration, setDuration] = useState('');
-
 function App() {
   const [loanCount, setLoanCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [connected, setConnected] = useState(false);
   const [account, setAccount] = useState(null);
+  const [loanAmount, setLoanAmount] = useState('');
+  const [repayAmount, setRepayAmount] = useState('');
+  const [duration, setDuration] = useState('');
 
   const connectWallet = async () => {
     if (!window.ethereum) return alert('Please install MetaMask.');
