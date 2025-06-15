@@ -59,7 +59,7 @@ function App() {
 
 
   useEffect(() => {
-    const fetchLoanCount = async () => {
+    const fetchLoanData = async () => {
       if (!window.ethereum) return;
       setLoading(true);
       try {
@@ -69,12 +69,12 @@ function App() {
         const count = await contract.loanCount();
         setLoanCount(Number(count));
 
-        const loansArray = [];
+        const fetchedLoans = [];
       for (let i = 0; i < count; i++) {
         const loan = await contract.loans(i);
-        loansArray.push({ id: i, ...loan });
+        fetchedLoans.push({ id: i, ...loan });
       }
-      setLoans(loansArray);
+      setLoans(fetchedLoans);
 
       } catch (err) {
         console.error('Failed to fetch loan count:', err);
@@ -83,36 +83,38 @@ function App() {
       }
     };
 
-    if (connected) fetchLoanCount();
+    if (connected) fetchLoanData();
   }, [connected]);
 
-  const handleFundLoan = async (id, amount) => {
+  const handleFundLoan = async (loanId, amount) => {
   try {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-    const tx = await contract.fundLoan(id, { value: amount });
+    const tx = await contract.fundLoan(loanId, { value: amount });
     await tx.wait();
-    alert("Loan funded!");
+    alert('Loan funded successfully!');
+    window.location.reload();
   } catch (err) {
-    console.error("Funding failed", err);
-    alert("Funding failed");
+    console.error('Fund loan failed:', err);
+    alert('Transaction failed');
   }
 };
 
-const handleRepayLoan = async (id, amount) => {
+const handleRepayLoan = async (loanId, repayAmount) => {
   try {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-    const tx = await contract.repayLoan(id, { value: amount });
+    const tx = await contract.repayLoan(loanId, { value: repayAmount });
     await tx.wait();
-    alert("Loan repaid!");
+    alert('Loan repaid successfully!');
+    window.location.reload();
   } catch (err) {
-    console.error("Repayment failed", err);
-    alert("Repayment failed");
+    console.error('Repay loan failed:', err);
+    alert('Transaction failed');
   }
 };
 
