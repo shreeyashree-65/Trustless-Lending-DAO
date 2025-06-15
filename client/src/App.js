@@ -75,7 +75,7 @@ function App() {
         loansArray.push({ id: i, ...loan });
       }
       setLoans(loansArray);
-      
+
       } catch (err) {
         console.error('Failed to fetch loan count:', err);
       } finally {
@@ -85,6 +85,36 @@ function App() {
 
     if (connected) fetchLoanCount();
   }, [connected]);
+
+  const handleFundLoan = async (id, amount) => {
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+    const tx = await contract.fundLoan(id, { value: amount });
+    await tx.wait();
+    alert("Loan funded!");
+  } catch (err) {
+    console.error("Funding failed", err);
+    alert("Funding failed");
+  }
+};
+
+const handleRepayLoan = async (id, amount) => {
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+    const tx = await contract.repayLoan(id, { value: amount });
+    await tx.wait();
+    alert("Loan repaid!");
+  } catch (err) {
+    console.error("Repayment failed", err);
+    alert("Repayment failed");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex flex-col items-center p-6">
