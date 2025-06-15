@@ -161,6 +161,58 @@ const handleRepayLoan = async (id, amount) => {
   />
   <Button onClick={handleRequestLoan}>📤 Submit Loan Request</Button>
 </div>
+<div className="w-full max-w-md mt-6 p-4 bg-white rounded shadow">
+  <h3 className="text-lg font-semibold mb-2">📥 Request a Loan</h3>
+  <input
+    type="number"
+    placeholder="Loan Amount (ETH)"
+    className="border p-2 w-full mb-2"
+    value={loanAmount}
+    onChange={(e) => setLoanAmount(e.target.value)}
+  />
+  <input
+    type="number"
+    placeholder="Repay Amount (ETH)"
+    className="border p-2 w-full mb-2"
+    value={repayAmount}
+    onChange={(e) => setRepayAmount(e.target.value)}
+  />
+  <input
+    type="number"
+    placeholder="Duration (seconds)"
+    className="border p-2 w-full mb-4"
+    value={duration}
+    onChange={(e) => setDuration(e.target.value)}
+  />
+  <Button onClick={handleRequestLoan}>📤 Submit Loan Request</Button>
+</div>
+
+<div className="w-full max-w-2xl mt-10 space-y-4">
+  <h2 className="text-2xl font-semibold text-indigo-700 mb-4">📚 Active Loans</h2>
+  {loans.map((loan) => (
+    <Card key={loan.id} className="p-4 bg-white rounded shadow">
+      <p><strong>Borrower:</strong> {loan.borrower}</p>
+      <p><strong>Amount:</strong> {ethers.formatEther(loan.amount)} ETH</p>
+      <p><strong>Repay:</strong> {ethers.formatEther(loan.repayAmount)} ETH</p>
+      <p><strong>Duration:</strong> {Number(loan.duration)}s</p>
+      <p><strong>Funded:</strong> {loan.funded ? "✅" : "❌"}</p>
+      <p><strong>Repaid:</strong> {loan.repaid ? "✅" : "❌"}</p>
+
+      {!loan.funded && (
+        <Button onClick={() => handleFundLoan(loan.id, loan.amount)} className="mt-2">
+          💰 Fund Loan
+        </Button>
+      )}
+
+      {loan.funded && !loan.repaid && loan.borrower.toLowerCase() === account?.toLowerCase() && (
+        <Button onClick={() => handleRepayLoan(loan.id, loan.repayAmount)} className="mt-2">
+          💵 Repay Loan
+        </Button>
+      )}
+    </Card>
+  ))}
+</div>
+
     </div>
   );
 }
