@@ -13,6 +13,8 @@ function App() {
   const [loanAmount, setLoanAmount] = useState('');
   const [repayAmount, setRepayAmount] = useState('');
   const [duration, setDuration] = useState('');
+  const [loans, setLoans] = useState([]);
+
 
   const connectWallet = async () => {
     if (!window.ethereum) return alert('Please install MetaMask.');
@@ -66,6 +68,14 @@ function App() {
         const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
         const count = await contract.loanCount();
         setLoanCount(Number(count));
+
+        const loansArray = [];
+      for (let i = 0; i < count; i++) {
+        const loan = await contract.loans(i);
+        loansArray.push({ id: i, ...loan });
+      }
+      setLoans(loansArray);
+      
       } catch (err) {
         console.error('Failed to fetch loan count:', err);
       } finally {
