@@ -179,19 +179,29 @@ const handleRepayLoan = async (loanId, repayAmount) => {
   <p className="text-gray-500">No active loans found.</p>
 ) : (
   loans.map((loan) => (
-    <Card key={loan.id} className="mb-4 p-4">
-      <p><strong>Loan ID:</strong> {loan.id}</p>
-      <p><strong>Borrower:</strong> {loan.borrower}</p>
-      <p><strong>Amount:</strong> {loan.amount} ETH</p>
-      <p><strong>Repay Amount:</strong> {loan.repayAmount} ETH</p>
-      <p><strong>Funded:</strong> {loan.funded ? '✅ Yes' : '❌ No'}</p>
-      {!loan.funded && (
-        <Button onClick={() => handleFundLoan(loan.id)}>💸 Fund Loan</Button>
-      )}
-      {loan.funded && (
-        <Button onClick={() => handleRepayLoan(loan.id)} className="mt-2">💰 Repay Loan</Button>
-      )}
-    </Card>
+    <Card key={loan.id} className="p-4 border-l-4 border-indigo-500 bg-white shadow-md">
+        <h4 className="text-lg font-bold mb-1">📄 Loan #{loan.id}</h4>
+        <p><strong>Borrower:</strong> {loan.borrower}</p>
+        <p><strong>Amount:</strong> {loan.amount} ETH</p>
+        <p><strong>Repay:</strong> {loan.repayAmount} ETH</p>
+        <p><strong>Duration:</strong> {loan.duration} seconds</p>
+        <p><strong>Status:</strong> 
+          {loan.repaid 
+            ? ' ✅ Repaid' 
+            : loan.funded 
+              ? ' 💸 Funded' 
+              : ' 🔍 Open for Funding'}
+        </p>
+
+        {!loan.funded && !loan.repaid && (
+          <Button
+            className="mt-2"
+            onClick={() => handleFundLoan(loan.id, ethers.parseEther(loan.amount))}
+          >
+            💰 Fund this Loan
+          </Button>
+        )}
+      </Card>
   ))
 )}
 
