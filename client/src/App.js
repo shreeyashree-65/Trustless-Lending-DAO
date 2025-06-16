@@ -70,9 +70,17 @@ function App() {
         setLoanCount(Number(count));
 
         const fetchedLoans = [];
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < Number(count); i++) {
         const loan = await contract.loans(i);
-        fetchedLoans.push({ id: i, ...loan });
+        fetchedLoans.push({
+    id: i,
+    borrower: loan.borrower,
+    amount: ethers.formatEther(loan.amount),
+    repayAmount: ethers.formatEther(loan.repayAmount),
+    duration: Number(loan.duration),
+    funded: loan.funded,
+    repaid: loan.repaid
+  });
       }
       setLoans(fetchedLoans);
 
@@ -84,7 +92,7 @@ function App() {
     };
 
     if (connected) fetchLoanData();
-  }, [connected]);
+  }, [connected, loanCount]);
 
   const handleFundLoan = async (loanId, amount) => {
   try {
@@ -95,7 +103,7 @@ function App() {
     const tx = await contract.fundLoan(loanId, { value: amount });
     await tx.wait();
     alert('Loan funded successfully!');
-    window.location.reload();
+    setLoanCount((prev) => prev + 1);
   } catch (err) {
     console.error('Fund loan failed:', err);
     alert('Transaction failed');
