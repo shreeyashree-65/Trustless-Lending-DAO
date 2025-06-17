@@ -133,6 +133,12 @@ const filteredLoans = loans.filter((loan) => {
   return true;
 });
 
+const getLoanStatus = (loan) => {
+  if (loan.funded && !loan.repaid) return "⏳ Active (Funded)";
+  if (loan.repaid) return "✅ Repaid";
+  if (!loan.funded) return "🛑 Awaiting Funding";
+  return "❓ Unknown";
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex flex-col items-center p-6">
