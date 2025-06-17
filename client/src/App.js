@@ -14,6 +14,7 @@ function App() {
   const [repayAmount, setRepayAmount] = useState('');
   const [duration, setDuration] = useState('');
   const [loans, setLoans] = useState([]);
+  const [filter, setFilter] = useState('all');
 
 
   const connectWallet = async () => {
@@ -215,6 +216,11 @@ const handleRepayLoan = async (loanId, amount) => {
   ))
 )}
 
+</div>
+<div className="flex space-x-2 my-4">
+  <Button onClick={() => setFilter('all')}>All Loans</Button>
+  <Button onClick={() => setFilter('borrower')}>My Borrowed Loans</Button>
+  <Button onClick={() => setFilter('lender')}>My Funded Loans</Button>
 </div>
 
     </div>
