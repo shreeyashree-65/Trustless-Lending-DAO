@@ -110,13 +110,13 @@ function App() {
   }
 };
 
-const handleRepayLoan = async (loanId, repayAmount) => {
+const handleRepayLoan = async (loanId, amount) => {
   try {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-    const tx = await contract.repayLoan(loanId, { value: repayAmount });
+    const tx = await contract.repayLoan(loanId, { value: amount });
     await tx.wait();
     alert('Loan repaid successfully!');
     window.location.reload();
@@ -194,13 +194,23 @@ const handleRepayLoan = async (loanId, repayAmount) => {
         </p>
 
         {!loan.funded && !loan.repaid && (
-          <Button
-            className="mt-2"
-            onClick={() => handleFundLoan(loan.id, ethers.parseEther(loan.amount))}
-          >
-            💰 Fund this Loan
-          </Button>
-        )}
+  <Button
+    className="mt-2"
+    onClick={() => handleFundLoan(loan.id, ethers.parseEther(loan.amount))}
+  >
+    💰 Fund this Loan
+  </Button>
+)}
+
+{loan.funded && !loan.repaid && account?.toLowerCase() === loan.borrower.toLowerCase() && (
+  <Button
+    className="mt-2 bg-green-600 hover:bg-green-700"
+    onClick={() => handleRepayLoan(loan.id, ethers.parseEther(loan.repayAmount))}
+  >
+    💵 Repay Loan
+  </Button>
+)}
+
       </Card>
   ))
 )}
