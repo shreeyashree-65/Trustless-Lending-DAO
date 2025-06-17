@@ -189,23 +189,17 @@ const getLoanStatus = (loan) => {
 
 <div className="w-full max-w-2xl mt-10 space-y-4">
  <h3 className="text-lg font-semibold my-4">📂 Active Loans</h3>
-{loans.length === 0 ? (
+{filteredLoans.length === 0 ? (
   <p className="text-gray-500">No active loans found.</p>
 ) : (
-  loans.map((loan) => (
+  filteredLoans.map((loan) => (
     <Card key={loan.id} className="p-4 border-l-4 border-indigo-500 bg-white shadow-md">
         <h4 className="text-lg font-bold mb-1">📄 Loan #{loan.id}</h4>
         <p><strong>Borrower:</strong> {loan.borrower}</p>
         <p><strong>Amount:</strong> {loan.amount} ETH</p>
         <p><strong>Repay:</strong> {loan.repayAmount} ETH</p>
         <p><strong>Duration:</strong> {loan.duration} seconds</p>
-        <p><strong>Status:</strong> 
-          {loan.repaid 
-            ? ' ✅ Repaid' 
-            : loan.funded 
-              ? ' 💸 Funded' 
-              : ' 🔍 Open for Funding'}
-        </p>
+        <p className="text-sm text-gray-600 mt-1">Status: {getLoanStatus(loan)}</p>
 
         {!loan.funded && !loan.repaid && (
   <Button
