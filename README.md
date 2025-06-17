@@ -1,22 +1,44 @@
-# 🏦 Trustless Lending DAO
+# 💸 Trustless Lending DAO
 
-A decentralized lending system where users can:
-- Request loans without needing a trusted intermediary
-- Fund loans directly with ETH
-- Enforce repayments or refunds based on predefined logic
+A decentralized application that enables users to request, fund, and track peer-to-peer loans without intermediaries. Built using **React**, **TailwindCSS**, and **Solidity** smart contracts deployed on Ethereum-compatible blockchains.
 
-## Features
+---
 
-- ✅ Request a loan with amount and deadline
-- ✅ Fund loans with exact ETH amount
-- ✅ Refund lenders if not repaid in time
-- ✅ Fully trustless and transparent
+## 🚀 Features
 
-## Built With
+- 🔗 **Wallet Connection**: Connect using MetaMask or any browser-compatible Ethereum wallet.
+- 📥 **Request a Loan**: Borrowers can request loans by specifying amount, repayment, and duration.
+- 💰 **Fund a Loan**: Lenders can fund loan requests by sending ETH.
+- 📊 **Loan Stats**: Track the total number of loans created on-chain.
+- 🎯 **Role-Based Filters**: View all loans or filter based on your role (Borrower / Lender).
+- 📜 **Loan History Toggle**: Switch between active loans and completed/expired ones.
+- 🏷 **Status Badges**: Visually distinguish between `Pending`, `Funded`, `Repaid`, and `Expired` loans.
+  
 
-- Solidity
-- Ethereum (Remix for testing)
+---
 
-## License
+## 🛠 Tech Stack
 
-MIT
+- **Frontend**: React, TailwindCSS, ShadCN UI
+- **Smart Contracts**: Solidity + Hardhat
+- **Blockchain Interaction**: Ethers.js
+- **Wallet Support**: MetaMask (via window.ethereum)
+
+---
+
+## 📦 Project Structure
+
+```bash
+.
+├── public/
+├── src/
+│   ├── components/
+│   │   └── ui/
+│   │       ├── Button.jsx
+│   │       └── Card.jsx
+│   ├── constants.js
+│   ├── App.jsx
+│   └── index.js
+├── smart_contracts/
+│   └── LendingDAO.sol
+└── README.md
