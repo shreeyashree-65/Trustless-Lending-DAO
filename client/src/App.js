@@ -134,17 +134,19 @@ const filteredLoans = loans.filter((loan) => {
   const isExpired = loan.funded && !loan.repaid && Date.now() / 1000 > Number(loan.startTime) + Number(loan.duration);
   const isRepaid = loan.repaid;
 
-  // History Mode
   if (showHistory) {
-    return (filter === 'borrower' && isBorrower && (isRepaid || isExpired)) ||
-           (filter === 'lender' && isLender && (isRepaid || isExpired)) ||
-           (filter === 'all' && (isRepaid || isExpired));
+    return (
+      (filter === 'borrower' && isBorrower && (isRepaid || isExpired)) ||
+      (filter === 'lender' && isLender && (isRepaid || isExpired)) ||
+      (filter === 'all' && (isRepaid || isExpired))
+    );
   }
 
-  // Active Loans
-  return (filter === 'borrower' && isBorrower && !isRepaid && !isExpired) ||
-         (filter === 'lender' && isLender && !isRepaid && !isExpired) ||
-         (filter === 'all' && !isRepaid && !isExpired);
+  return (
+    (filter === 'borrower' && isBorrower && !isRepaid && !isExpired) ||
+    (filter === 'lender' && isLender && !isRepaid && !isExpired) ||
+    (filter === 'all' && !isRepaid && !isExpired)
+  );
 });
 
 
