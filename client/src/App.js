@@ -203,6 +203,15 @@ const getLoanStatus = (loan) => {
           >
             💰 Funded by Me
           </Button>
+
+          <Button
+            className="mt-2"
+            variant="secondary"
+            onClick={() => setShowHistory(!showHistory)}
+>
+            {showHistory ? "👁 View Active Loans" : "📜 View Loan History"}
+          </Button>
+
         </div>
       </>
     )}
@@ -239,7 +248,7 @@ const getLoanStatus = (loan) => {
         <p className="text-gray-500">No active loans found.</p>
       ) : (
         filteredLoans.map((loan) => (
-          <Card key={loan.id} className="p-4 border-l-4 border-indigo-500 bg-white shadow-md">
+          <Card key={loan.id} className={`p-4 border-l-4 ${loan.repaid ? "border-green-500" : "border-gray-400"} bg-white shadow-md`}>
             <h4 className="text-lg font-bold mb-1">📄 Loan #{loan.id}</h4>
             <p><strong>Borrower:</strong> {loan.borrower}</p>
             <p><strong>Amount:</strong> {loan.amount} ETH</p>
