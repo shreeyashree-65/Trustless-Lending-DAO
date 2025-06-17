@@ -1,5 +1,5 @@
 import Card from './components/ui/card';
-import Button from './components/ui/button';
+import { Button } from './components/ui/button';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { CONTRACT_ABI, CONTRACT_ADDRESS } from './constants';
@@ -141,97 +141,124 @@ const getLoanStatus = (loan) => {
 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex flex-col items-center p-6">
-      <h1 className="text-4xl font-bold text-indigo-600 mb-4">Trustless Lending DAO 💸</h1>
+  <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex flex-col items-center p-6">
+    <h1 className="text-4xl font-bold text-indigo-600 mb-4">Trustless Lending DAO 💸</h1>
 
-      {!connected ? (
-        <Button onClick={connectWallet} className="mb-6">🔗 Connect Wallet</Button>
-      ) : (
-        <div className="text-gray-700 mb-4">Connected as <span className="font-semibold">{account}</span></div>
-      )}
+    {!connected ? (
+      <Button onClick={connectWallet} className="mb-6">🔗 Connect Wallet</Button>
+    ) : (
+      <div className="text-gray-700 mb-4">Connected as <span className="font-semibold">{account}</span></div>
+    )}
 
-      {loading ? (
-        <Loader2 className="animate-spin h-6 w-6 text-indigo-500" />
-      ) : (
+    {loading ? (
+      <Loader2 className="animate-spin h-6 w-6 text-indigo-500" />
+    ) : (
+      <>
         <Card className="w-full max-w-md shadow-xl">
           <div className="p-6">
             <h2 className="text-xl font-semibold text-purple-800 mb-2">📊 Loan Stats</h2>
-            <p className="text-lg">Total Loans Created: <span className="font-bold text-indigo-700">{loanCount}</span></p>
+            <p className="text-lg">
+              Total Loans Created:{" "}
+              <span className="font-bold text-indigo-700">{loanCount}</span>
+            </p>
           </div>
         </Card>
-      )}
-      <div className="w-full max-w-md mt-6 p-4 bg-white rounded shadow">
-  <h3 className="text-lg font-semibold mb-2">📥 Request a Loan</h3>
-  <input
-    type="number"
-    placeholder="Loan Amount (ETH)"
-    className="border p-2 w-full mb-2"
-    value={loanAmount}
-    onChange={(e) => setLoanAmount(e.target.value)}
-  />
-  <input
-    type="number"
-    placeholder="Repay Amount (ETH)"
-    className="border p-2 w-full mb-2"
-    value={repayAmount}
-    onChange={(e) => setRepayAmount(e.target.value)}
-  />
-  <input
-    type="number"
-    placeholder="Duration (seconds)"
-    className="border p-2 w-full mb-4"
-    value={duration}
-    onChange={(e) => setDuration(e.target.value)}
-  />
-  <Button onClick={handleRequestLoan}>📤 Submit Loan Request</Button>
-</div>
 
+        <div className="flex gap-2 mt-4">
+          <Button
+            type="button"
+            variant={filter === 'all' ? 'default' : 'outline'}
+            onClick={() => setFilter('all')}
+          >
+            🌐 All
+          </Button>
 
-<div className="w-full max-w-2xl mt-10 space-y-4">
- <h3 className="text-lg font-semibold my-4">📂 Active Loans</h3>
-{filteredLoans.length === 0 ? (
-  <p className="text-gray-500">No active loans found.</p>
-) : (
-  filteredLoans.map((loan) => (
-    <Card key={loan.id} className="p-4 border-l-4 border-indigo-500 bg-white shadow-md">
-        <h4 className="text-lg font-bold mb-1">📄 Loan #{loan.id}</h4>
-        <p><strong>Borrower:</strong> {loan.borrower}</p>
-        <p><strong>Amount:</strong> {loan.amount} ETH</p>
-        <p><strong>Repay:</strong> {loan.repayAmount} ETH</p>
-        <p><strong>Duration:</strong> {loan.duration} seconds</p>
-        <p className="text-sm text-gray-600 mt-1">Status: {getLoanStatus(loan)}</p>
+          <Button
+            type="button"
+            variant={filter === 'borrower' ? 'default' : 'outline'}
+            onClick={() => setFilter('borrower')}
+          >
+            🧾 My Loans
+          </Button>
 
-        {!loan.funded && !loan.repaid && (
-  <Button
-    className="mt-2"
-    onClick={() => handleFundLoan(loan.id, ethers.parseEther(loan.amount))}
-  >
-    💰 Fund this Loan
-  </Button>
-)}
+          <Button
+            type="button"
+            variant={filter === 'lender' ? 'default' : 'outline'}
+            onClick={() => setFilter('lender')}
+          >
+            💰 Funded by Me
+          </Button>
+        </div>
+      </>
+    )}
 
-{loan.funded && !loan.repaid && account?.toLowerCase() === loan.borrower.toLowerCase() && (
-  <Button
-    className="mt-2 bg-green-600 hover:bg-green-700"
-    onClick={() => handleRepayLoan(loan.id, ethers.parseEther(loan.repayAmount))}
-  >
-    💵 Repay Loan
-  </Button>
-)}
-
-      </Card>
-  ))
-)}
-
-</div>
-<div className="flex space-x-2 my-4">
-  <Button onClick={() => setFilter('all')}>All Loans</Button>
-  <Button onClick={() => setFilter('borrower')}>My Borrowed Loans</Button>
-  <Button onClick={() => setFilter('lender')}>My Funded Loans</Button>
-</div>
-
+    <div className="w-full max-w-md mt-6 p-4 bg-white rounded shadow">
+      <h3 className="text-lg font-semibold mb-2">📥 Request a Loan</h3>
+      <input
+        type="number"
+        placeholder="Loan Amount (ETH)"
+        className="border p-2 w-full mb-2"
+        value={loanAmount}
+        onChange={(e) => setLoanAmount(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Repay Amount (ETH)"
+        className="border p-2 w-full mb-2"
+        value={repayAmount}
+        onChange={(e) => setRepayAmount(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Duration (seconds)"
+        className="border p-2 w-full mb-4"
+        value={duration}
+        onChange={(e) => setDuration(e.target.value)}
+      />
+      <Button onClick={handleRequestLoan}>📤 Submit Loan Request</Button>
     </div>
-  );
-}
 
-export default App;
+    <div className="w-full max-w-2xl mt-10 space-y-4">
+      <h3 className="text-lg font-semibold my-4">📂 Active Loans</h3>
+      {filteredLoans.length === 0 ? (
+        <p className="text-gray-500">No active loans found.</p>
+      ) : (
+        filteredLoans.map((loan) => (
+          <Card key={loan.id} className="p-4 border-l-4 border-indigo-500 bg-white shadow-md">
+            <h4 className="text-lg font-bold mb-1">📄 Loan #{loan.id}</h4>
+            <p><strong>Borrower:</strong> {loan.borrower}</p>
+            <p><strong>Amount:</strong> {loan.amount} ETH</p>
+            <p><strong>Repay:</strong> {loan.repayAmount} ETH</p>
+            <p><strong>Duration:</strong> {loan.duration} seconds</p>
+            <p className="text-sm text-gray-600 mt-1">Status: {getLoanStatus(loan)}</p>
+
+            {!loan.funded && !loan.repaid && (
+              <Button
+                className="mt-2"
+                onClick={() => handleFundLoan(loan.id, ethers.parseEther(loan.amount))}
+              >
+                💰 Fund this Loan
+              </Button>
+            )}
+
+            {loan.funded && !loan.repaid && account?.toLowerCase() === loan.borrower.toLowerCase() && (
+              <Button
+                className="mt-2 bg-green-600 hover:bg-green-700"
+                onClick={() => handleRepayLoan(loan.id, ethers.parseEther(loan.repayAmount))}
+              >
+                💵 Repay Loan
+              </Button>
+            )}
+          </Card>
+        ))
+      )}
+    </div>
+
+    <div className="flex space-x-2 my-4">
+      <Button onClick={() => setFilter('all')}>All Loans</Button>
+      <Button onClick={() => setFilter('borrower')}>My Borrowed Loans</Button>
+      <Button onClick={() => setFilter('lender')}>My Funded Loans</Button>
+    </div>
+  </div>
+);
+}
