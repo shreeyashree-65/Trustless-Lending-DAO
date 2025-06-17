@@ -263,8 +263,30 @@ const getLoanStatus = (loan) => {
                ? "border-red-500"
                 : "border-blue-500"
             } bg-white shadow-md`}>
-              
-            <h4 className="text-lg font-bold mb-1">📄 Loan #{loan.id}</h4>
+
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold">Loan #{loan.id}</h3>
+              <span className={`text-xs font-bold px-2 py-1 rounded-full
+                ${
+                  loan.repaid
+                    ? 'bg-green-100 text-green-800'
+                    : loan.funded && Date.now() / 1000 > Number(loan.startTime) + Number(loan.duration)
+                    ? 'bg-red-100 text-red-800'
+                    : loan.funded
+                    ? 'bg-blue-100 text-blue-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}
+              >
+                {loan.repaid
+                   ? '✅ Repaid'
+                   : loan.funded && Date.now() / 1000 > Number(loan.startTime) + Number(loan.duration)
+                   ? '❌ Expired'
+                   : loan.funded
+                   ? '🔵 Funded'
+                   : '🟡 Pending'}
+              </span>
+            </div>
+
             <p><strong>Borrower:</strong> {loan.borrower}</p>
             <p><strong>Amount:</strong> {loan.amount} ETH</p>
             <p><strong>Repay:</strong> {loan.repayAmount} ETH</p>
