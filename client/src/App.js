@@ -15,6 +15,7 @@ function App() {
   const [duration, setDuration] = useState('');
   const [loans, setLoans] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [showHistory, setShowHistory] = useState(false);
 
 
   const connectWallet = async () => {
@@ -128,10 +129,24 @@ const handleRepayLoan = async (loanId, amount) => {
 };
 
 const filteredLoans = loans.filter((loan) => {
-  if (filter === 'borrower') return loan.borrower.toLowerCase() === account?.toLowerCase();
-  if (filter === 'lender') return loan.lender.toLowerCase() === account?.toLowerCase();
-  return true;
+  const isBorrower = loan.borrower.toLowerCase() === account?.toLowerCase();
+  const isLender = loan.lender.toLowerCase() === account?.toLowerCase();
+  const isExpired = loan.funded && !loan.repaid && Date.now() / 1000 > Number(loan.startTime) + Number(loan.duration);
+  const isRepaid = loan.repaid;
+
+  // History Mode
+  if (showHistory) {
+    return (filter === 'borrower' && isBorrower && (isRepaid || isExpired)) ||
+           (filter === 'lender' && isLender && (isRepaid || isExpired)) ||
+           (filter === 'all' && (isRepaid || isExpired));
+  }
+
+  // Active Loans
+  return (filter === 'borrower' && isBorrower && !isRepaid && !isExpired) ||
+         (filter === 'lender' && isLender && !isRepaid && !isExpired) ||
+         (filter === 'all' && !isRepaid && !isExpired);
 });
+
 
 const getLoanStatus = (loan) => {
   if (loan.funded && !loan.repaid) return "⏳ Active (Funded)";
